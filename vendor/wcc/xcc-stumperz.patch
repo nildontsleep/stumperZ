@@ -1,0 +1,77 @@
+diff --git a/libsrc/_wasm/unistd/open.c b/libsrc/_wasm/unistd/open.c
+index ee511aa..39e9fc6 100644
+--- a/libsrc/_wasm/unistd/open.c
++++ b/libsrc/_wasm/unistd/open.c
+@@ -14,12 +14,15 @@ typedef struct {
+   uint32_t fdflags;
+   uint64_t fs_rights_inheriting;
+   uint32_t opened;
++  uint32_t last_error;
+ } OpenData;
+ 
+ static bool search_open(int base_fd, const char *fn, size_t fnlen, void *data) {
+   OpenData *od = (OpenData*)data;
+   uint32_t result = path_open(base_fd, od->dirflags, fn, fnlen, od->oflags, od->fs_rights_base,
+                               od->fs_rights_inheriting, od->fdflags, &od->opened);
++  if (result != 0 && (od->last_error == 0 || od->last_error == 44))
++    od->last_error = result;
+   return result == 0;
+ }
+ 
+@@ -29,6 +32,7 @@ int open(const char *fn, int flag, ...) {
+   od.oflags = 0;
+   od.fs_rights_base = 0;
+   od.fdflags = 0; //FDFLAGS_RSYNC;
++  od.last_error = 0;
+   switch (flag & O_ACCMODE) {
+   case O_RDONLY:
+     od.fs_rights_base =
+@@ -74,6 +78,13 @@ int open(const char *fn, int flag, ...) {
+   if (_search_preopen(fn, &od, search_open))
+     return od.opened;
+ 
+-  errno = ENOENT;  // (flag & O_CREAT) ? EEXIST, or something.
++  // Map the WASI error code to the POSIX errno value.
++  switch (od.last_error) {
++  case 2:  errno = EACCES; break;
++  case 20: errno = EEXIST; break;
++  case 31: errno = EISDIR; break;
++  case 54: errno = ENOTDIR; break;
++  default: errno = ENOENT; break;
++  }
+   return -1;
+ }
+diff --git a/libsrc/_wasm/unistd/read.c b/libsrc/_wasm/unistd/read.c
+index 5c14f35..028fd04 100644
+--- a/libsrc/_wasm/unistd/read.c
++++ b/libsrc/_wasm/unistd/read.c
+@@ -10,6 +10,6 @@ ssize_t read(int fd, void *buf, size_t size) {
+   int result = fd_read(fd, &iov, 1, &readed);
+   if (result == 0)
+     return readed;
+-  errno = EIO;  // TODO
++  errno = result == 31 ? EISDIR : result == 8 ? EBADF : EIO;
+   return -1;
+ }
+diff --git a/src/cc/frontend/expr.c b/src/cc/frontend/expr.c
+index b139c3b..d50ef64 100644
+--- a/src/cc/frontend/expr.c
++++ b/src/cc/frontend/expr.c
+@@ -1203,7 +1203,7 @@ Expr *make_expr_cmp(enum ExprKind kind, const Token *tok, Expr *lhs, Expr *rhs)
+     if (is_number(lt) && is_number(rt)) {
+       bool make_int = false;
+       if (is_fixnum(lt) && is_fixnum(rt)) {
+-        if (lc || rc) {
++        if ((lc || rc) && !(lc && rc)) {  // stumperZ fix: both const -> usual arithmetic conversions
+           Expr **pLhs = &lhs, **pRhs = &rhs;
+           if (lc) {  // Make rhs const.
+             pLhs = &rhs, pRhs = &lhs;
+@@ -1225,7 +1225,7 @@ Expr *make_expr_cmp(enum ExprKind kind, const Token *tok, Expr *lhs, Expr *rhs)
+           make_int = lu != ru && kind > EX_NE;
+         }
+       }
+-      if (!(is_fixnum(lt) && is_fixnum(rt)) || !(lc || rc)) {
++      if (!(is_fixnum(lt) && is_fixnum(rt)) || !(lc || rc) || (lc && rc)) {
+         if (!cast_numbers(&lhs, &rhs, make_int)) {
+           parse_error(PE_NOFATAL, tok, "cannot compare except numbers");
+           return new_expr_fixlit(&tyBool, tok, 0);

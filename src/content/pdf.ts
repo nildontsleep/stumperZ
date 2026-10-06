@@ -1,0 +1,282 @@
+// Facts extracted from the 12 PDFs (cpool_Day01.pdf ... cpool_Day12.pdf).
+// Page numbers are the printed numbers at the bottom of each page (cover = no number).
+// Prototypes were re-checked against the text layer; extraction glitches are listed per day.
+import type { PdfDay } from './types';
+
+const NO_MAIN = 'Ne pas pousser de fonction main : la correction ajoute son propre main.c.';
+const STAR_C = 'Si un de tes fichiers empêche la compilation avec *.c, l\'Autograder ne peut pas corriger : note 0.';
+
+export const PDF_DAYS: PdfDay[] = [
+  {
+    id: 'd01', file: 'cpool_Day01.pdf', title: 'Day 01', subtitle: 'Unix environments', version: 'v6', pages: 8,
+    language: 'Shell / commandes Unix',
+    rules: [
+      { text: 'Inscription aux activités de la piscine sur My.', page: 1 },
+      { text: 'Rendu via des dépôts GitHub de l\'organisation Epitech (clé SSH id_rsa, SSO autorisé).', page: 3 },
+      { text: 'À partir de là : commit et push à la fin de chaque tâche.', page: 5 },
+      { text: 'Vérifier que les permissions des fichiers ne changent pas pendant la copie.', page: 5 },
+    ],
+    allowed: 'Commandes du shell',
+    tasks: [
+      { section: 'Task 01 - Create a delivery directory', page: 2, summary: 'Créer delivery/task01 avec test01 (vide), test02 (texte, droits lecture/exécution pour tous, écriture pour toi seul) et test03, lien symbolique vers test02.', skills: ['shell'] },
+      { section: 'Task 02 - Z', page: 2, summary: 'Fichier z qui affiche Z suivi d\'un retour à la ligne avec cat (cat -e z → Z$).', skills: ['shell'] },
+      { section: 'Task 03 - midLS', page: 2, summary: 'Commande qui liste fichiers et dossiers (sans fichiers cachés), triés, séparés par des virgules, dossiers terminés par /.', skills: ['shell'] },
+      { section: 'Task 04 - Access your repositories - git and github.com', page: 3, summary: 'Compte GitHub, clé SSH, git config user.name / user.email.', skills: ['git'] },
+      { section: 'Do a delivery - Clone a repository and push your work', page: 4, summary: 'git clone, git add, git commit, git push.', skills: ['git'] },
+      { section: 'Task 05 - mr_clean', page: 6, summary: 'Une seule commande find qui supprime les fichiers finissant par ~ ou commençant et finissant par #.', skills: ['shell'] },
+      { section: 'Task 06 - push_that.sh', page: 6, summary: 'Script bash (shebang) qui ajoute tout, commit avec le message passé en paramètre, et push.', skills: ['shell', 'git'] },
+      { section: 'Task 07 - Tree', page: 7, summary: 'Reproduire une arborescence avec dossiers, fichiers et liens symboliques (tree -FQ).', skills: ['shell'] },
+      { section: 'Task 08 - Tar', page: 8, summary: 'Archive tar compressée gzip du dossier task07 (task08/task07.tgz).', skills: ['shell'] },
+    ],
+    extractionNotes: ['Les ligatures « ﬁ » de l\'extraction se lisent « fi ».', '« yout GitHub account » (p. 3) est une coquille du PDF original : « your ».'],
+  },
+  {
+    id: 'd02', file: 'cpool_Day02.pdf', title: 'Day 02', subtitle: 'Shell language', version: 'v4', pages: 4,
+    language: 'bash',
+    rules: [
+      { text: 'Langage : bash. Penser au shebang et au droit d\'exécution des scripts.', page: 1 },
+      { text: 'Ressources (students.csv, passwd…) à télécharger sur My, à côté du PDF.', page: 1 },
+    ],
+    allowed: 'Commandes du shell',
+    tasks: [
+      { section: 'Task 01 - how_many_are_we.sh', page: 2, summary: 'Compter les étudiants d\'une ville (insensible à la casse) depuis students.csv lu sur l\'entrée standard.', skills: ['shell'] },
+      { section: 'Task 02 - find_sh.sh', page: 2, summary: 'Afficher les fichiers finissant par .sh dans le dossier courant et ses sous-dossiers.', skills: ['shell'] },
+      { section: 'Task 03 - count_files.sh', page: 2, summary: 'Afficher le nombre de fichiers réguliers du dossier courant et des sous-dossiers.', skills: ['shell'] },
+      { section: 'Task 04 - gotta_catch_them_all.sh', page: 3, summary: 'Compter les personnes dont le nom commence par l\'argument (fichier passwd).', skills: ['shell'] },
+      { section: 'PATH - Run your scripts from anywhere', page: 3, summary: 'Créer ~/my_scripts et l\'ajouter au $PATH via ~/.bashrc.', skills: ['shell'] },
+      { section: 'Task 05 - Encrypted', page: 3, summary: 'Déchiffrer une substitution avec la clé LONEYTUSARFPDHIKZBCGJMQVWX en une commande (tr).', skills: ['shell'] },
+      { section: 'Task 06 - skip.sh', page: 4, summary: 'Afficher une ligne sur deux de l\'entrée, en commençant par la première.', skills: ['shell'] },
+      { section: 'Task 07 - r_tacpy.sh', page: 4, summary: 'Pipeline sur passwd : une ligne sur deux, logins inversés, tri inverse, lignes MY_LINE1 à MY_LINE2, séparées par ", " et terminées par ".".', skills: ['shell'] },
+    ],
+  },
+  {
+    id: 'd03', file: 'cpool_Day03.pdf', title: 'Day 03', subtitle: 'Intro to programming', version: 'v4', pages: 6,
+    language: 'C',
+    rules: [
+      { text: 'Tableaux et chaînes interdits pour toutes les tâches.', page: 1 },
+      { text: NO_MAIN + ' Compilation avec leur main.c et leur my_putchar.c.', page: 1 },
+      { text: 'Seule fonction autorisée : my_putchar (ne pas la rendre, ne pas la copier dans tes fichiers).', page: 1 },
+      { text: STAR_C, page: 1 },
+      { text: 'Respect de la Coding Style Epitech, vérifiable avec epiclang (et banana-check-repo pour l\'organisation des fichiers).', page: 2 },
+    ],
+    allowed: 'my_putchar uniquement',
+    compile: 'cc *.c (avec leur main.c et my_putchar.c)',
+    tasks: [
+      { section: 'Task 00 - Coding Style', page: 2, summary: 'Lire la Coding Style, lancer epiclang my_print_alpha.c.', skills: ['compile'] },
+      { section: 'Task 01 - my_print_alpha', page: 3, delivery: 'my_print_alpha.c', prototype: 'int my_print_alpha(void);', summary: 'Afficher l\'alphabet minuscule de a à z sur une ligne.', skills: ['chars', 'loops'], exercise: 'ex_print_alpha' },
+      { section: 'Task 02 - my_print_revalpha', page: 3, delivery: 'my_print_revalpha.c', prototype: 'int my_print_revalpha(void);', summary: 'Alphabet de z à a.', skills: ['chars', 'loops'], exercise: 'ex_print_revalpha' },
+      { section: 'Task 03 - my_print_digits', page: 3, delivery: 'my_print_digits.c', prototype: 'int my_print_digits(void);', summary: 'Chiffres de 0 à 9 sur une ligne.', skills: ['chars', 'loops'], exercise: 'ex_print_digits' },
+      { section: 'Task 04 - my_isneg', page: 3, delivery: 'my_isneg.c', prototype: 'int my_isneg(int n);', summary: 'Afficher N si n est négatif, P si positif ou nul.', skills: ['cond'], exercise: 'ex_isneg' },
+      { section: 'Task 05 - my_print_comb', page: 4, delivery: 'my_print_comb.c', prototype: 'int my_print_comb(void);', summary: 'Tous les nombres de 3 chiffres différents en ordre croissant : 012, 013, …, 789.', skills: ['loops', 'chars'], exercise: 'ex_print_comb' },
+      { section: 'Task 06 - my_print_comb2', page: 4, delivery: 'my_print_comb2.c', prototype: 'int my_print_comb2(void);', summary: 'Toutes les paires de nombres à deux chiffres : 00 01, 00 02, …, 98 99.', skills: ['loops', 'chars'], exercise: 'ex_print_comb2' },
+      { section: 'Task 07 - my_put_nbr', page: 5, delivery: 'my_put_nbr.c', prototype: 'int my_put_nbr(int nb);', summary: 'Afficher n\'importe quel int (négatifs, 0, valeurs extrêmes).', skills: ['putnbr'], exercise: 'ex_put_nbr' },
+      { section: 'Task 08 - Testing', page: 5, delivery: 'tests/tests_my_put_nbr.c', summary: 'Écrire un main de test qui appelle my_put_nbr sur tous les cas (normaux et limites).', skills: ['tests'] },
+      { section: 'Task 09 - my_print_combn', page: 6, delivery: 'my_print_combn.c', prototype: 'int my_print_combn(int n)', summary: 'Généralisation de my_print_comb à n chiffres.', skills: ['loops', 'recursion'] },
+    ],
+    extractionNotes: ['Le prototype de my_print_combn est écrit sans point-virgule dans le PDF : int my_print_combn(int n)'],
+  },
+  {
+    id: 'd04', file: 'cpool_Day04.pdf', title: 'Day 04', subtitle: 'Pointers', version: 'v4', pages: 4,
+    language: 'C',
+    rules: [
+      { text: NO_MAIN + ' Compilation avec leur main.c et leur my_putchar.c.', page: 1 },
+      { text: 'Seule fonction autorisée : my_putchar.', page: 1 },
+      { text: STAR_C, page: 1 },
+    ],
+    allowed: 'my_putchar uniquement',
+    tasks: [
+      { section: 'Task 01 - my_swap', page: 2, delivery: 'my_swap.c', prototype: 'void my_swap(int *a, int *b);', summary: 'Échanger deux entiers dont on reçoit les adresses.', skills: ['pointers'], exercise: 'ex_swap' },
+      { section: 'Task 02 - my_putstr', page: 2, delivery: 'my_putstr.c', prototype: 'int my_putstr(char const *str);', summary: 'Afficher une chaîne caractère par caractère.', skills: ['strings'], exercise: 'ex_putstr' },
+      { section: 'Task 03 - my_strlen', page: 2, delivery: 'my_strlen.c', prototype: 'int my_strlen(char const *str);', summary: 'Compter les caractères d\'une chaîne.', skills: ['strings'], exercise: 'ex_strlen' },
+      { section: 'Task 04 - my_evil_str', page: 3, delivery: 'my_evil_str.c', prototype: 'char *my_evil_str(char *str);', summary: 'Inverser la chaîne sur place et renvoyer son adresse. Attention aux chaînes en lecture seule (segfault) : man 3 strdup.', skills: ['strings', 'pointers'], exercise: 'ex_evil_str' },
+      { section: 'Task 05 - my_getnbr', page: 3, delivery: 'my_getnbr.c', prototype: 'int my_getnbr(char const *str);', summary: 'Convertir une chaîne en int : signes multiples, arrêt au premier non-chiffre, 0 si ça déborde.', skills: ['getnbr'], exercise: 'ex_getnbr' },
+      { section: 'Task 06 - my_sort_int_array', page: 4, delivery: 'my_sort_int_array.c', prototype: 'void my_sort_int_array(int *array, int size);', summary: 'Trier un tableau d\'entiers par ordre croissant.', skills: ['arrays'], exercise: 'ex_sort_int_array' },
+    ],
+  },
+  {
+    id: 'd05', file: 'cpool_Day05.pdf', title: 'Day 05', subtitle: 'Recursivity', version: 'v4', pages: 4,
+    language: 'C',
+    rules: [
+      { text: NO_MAIN + ' Compilation avec leur main.c et leur my_putchar.c.', page: 1 },
+      { text: 'Seule fonction autorisée : my_putchar.', page: 1 },
+      { text: 'Chaque fonction doit répondre en moins de 2 secondes.', page: 1 },
+      { text: 'Les débordements (overflows) doivent être gérés comme des erreurs.', page: 1 },
+    ],
+    allowed: 'my_putchar uniquement',
+    tasks: [
+      { section: 'Task 01 - my_compute_factorial_it', page: 2, delivery: 'my_compute_factorial_it.c', prototype: 'int my_compute_factorial_it(int nb);', summary: 'Factorielle itérative. 0! = 1, n < 0 → 0, erreur (débordement) → 0.', skills: ['loops'], exercise: 'ex_factorial_it' },
+      { section: 'Task 02 - my_compute_factorial_rec', page: 2, delivery: 'my_compute_factorial_rec.c', prototype: 'int my_compute_factorial_rec(int nb);', summary: 'Même chose en récursif.', skills: ['recursion'], exercise: 'ex_factorial_rec' },
+      { section: 'Task 03 - my_compute_power_it', page: 2, delivery: 'my_compute_power_it.c', prototype: 'int my_compute_power_it(int nb, int p);', summary: 'nb puissance p, itératif. n^0 = 1, p < 0 → 0.', skills: ['loops'], exercise: 'ex_power_it' },
+      { section: 'Task 04 - my_compute_power_rec', page: 3, delivery: 'my_compute_power_rec.c', prototype: 'int my_compute_power_rec(int nb, int p);', summary: 'Puissance en récursif.', skills: ['recursion'], exercise: 'ex_power_rec' },
+      { section: 'Task 05 - my_compute_square_root', page: 3, delivery: 'my_compute_square_root.c', prototype: 'int my_compute_square_root(int nb);', summary: 'Racine carrée si elle est entière, sinon 0.', skills: ['loops'], exercise: 'ex_square_root' },
+      { section: 'Task 06 - my_is_prime', page: 3, delivery: 'my_is_prime.c', prototype: 'int my_is_prime(int nb);', summary: '1 si nb est premier, 0 sinon (0 et 1 ne sont pas premiers).', skills: ['loops', 'cond'], exercise: 'ex_is_prime' },
+      { section: 'Task 07 - my_find_prime_sup', page: 4, delivery: 'my_find_prime_sup.c', prototype: 'int my_find_prime_sup(int nb);', summary: 'Plus petit nombre premier supérieur ou égal à nb.', skills: ['loops'], exercise: 'ex_find_prime_sup' },
+      { section: 'Task 08 - The n queens', page: 4, delivery: 'count_valid_queens_placements.c', prototype: 'int count_valid_queens_placements(int n);', summary: 'Compter récursivement les placements de n reines sur un échiquier n×n (1→1, 2→0, 3→0, 4→2, 5→10).', skills: ['recursion', 'arrays'] },
+    ],
+    extractionNotes: [
+      'Le nom de fichier de la Task 07 contient une ligature dans le PDF : my_ﬁnd_prime_sup.c = my_find_prime_sup.c.',
+      'Dans l\'exemple de la Task 08, « /count_valid_queens_placements » est en fait « ./count_valid_queens_placements » (le point a été perdu à l\'extraction).',
+    ],
+  },
+  {
+    id: 'd06', file: 'cpool_Day06.pdf', title: 'Day 06', subtitle: 'Pointers are back', version: 'v3.1', pages: 9,
+    language: 'C',
+    rules: [
+      { text: NO_MAIN + ' Compilation avec leur main.c et leur my_putchar.c.', page: 1 },
+      { text: 'Seule fonction autorisée : my_putchar. Aucune fonction de la bibliothèque string dans le rendu.', page: 1 },
+      { text: 'Tests unitaires avec le framework Criterion (chapitre « Unit tests for C/C++ » de l\'E-Learning).', page: 2 },
+    ],
+    allowed: 'my_putchar uniquement',
+    tasks: [
+      { section: 'Introduction - Unit Tests', page: 2, summary: 'Écrire des tests unitaires avec Criterion ; compilation manuelle (pas encore de Makefile).', skills: ['tests'] },
+      { section: 'Task 01 - my_strcpy', page: 2, delivery: 'my_strcpy.c', prototype: 'char *my_strcpy(char *dest, char const *src)', summary: 'Copier src dans dest (assez grand), renvoyer dest.', skills: ['strfuncs'], exercise: 'ex_strcpy' },
+      { section: 'Task 02 - my_strncpy', page: 2, delivery: 'my_strncpy.c', prototype: 'char *my_strncpy(char *dest, char const *src, int n);', summary: 'Copier n caractères. Ajouter \\0 si n > longueur de src ; ne pas en ajouter si n < longueur.', skills: ['strfuncs'], exercise: 'ex_strncpy' },
+      { section: 'Task 03 - my_revstr', page: 3, delivery: 'my_revstr.c', prototype: 'char *my_revstr(char *str);', summary: 'Inverser une chaîne, renvoyer str.', skills: ['strfuncs'], exercise: 'ex_revstr' },
+      { section: 'Task 04 - Unit tests - part I', page: 3, delivery: 'tests/test_my_strncpy.c, tests/test_my_revstr.c', summary: 'Tests Criterion : couverture lignes ≥ 60 %, branches ≥ 40 %.', skills: ['tests'] },
+      { section: 'Task 05 - my_strstr', page: 4, delivery: 'my_strstr.c', prototype: 'char *my_strstr(char *str, char const *to_find);', summary: 'Reproduire strstr (voir my_strcmp / my_strncmp).', skills: ['strfuncs'], exercise: 'ex_strstr' },
+      { section: 'Task 06 - my_strcmp', page: 4, delivery: 'my_strcmp.c', prototype: 'int my_strcmp(char const *s1, char const *s2);', summary: 'Reproduire strcmp.', skills: ['strfuncs'], exercise: 'ex_strcmp' },
+      { section: 'Task 07 - my_strncmp', page: 4, delivery: 'my_strncmp.c', prototype: 'int my_strncmp(char const *s1, char const *s2, int n);', summary: 'Reproduire strncmp (mêmes valeurs de retour que man 3 strcmp).', skills: ['strfuncs'], exercise: 'ex_strncmp' },
+      { section: 'Task 08 - my_strupcase', page: 4, delivery: 'my_strupcase.c', prototype: 'char *my_strupcase(char *str);', summary: 'Mettre toutes les lettres en majuscules.', skills: ['strfuncs', 'chars'], exercise: 'ex_strupcase' },
+      { section: 'Task 09 - my_strlowcase', page: 5, delivery: 'my_strlowcase.c', prototype: 'char *my_strlowcase(char *str);', summary: 'Mettre toutes les lettres en minuscules.', skills: ['strfuncs', 'chars'], exercise: 'ex_strlowcase' },
+      { section: 'Task 10 - my_strcapitalize', page: 5, delivery: 'my_strcapitalize.c', prototype: 'char *my_strcapitalize(char *str);', summary: 'Majuscule à la première lettre de chaque mot : « hey, how are you? 42WORds forty-two; fifty+one » → « Hey, How Are You? 42words Forty-Two; Fifty+One ».', skills: ['strfuncs', 'chars'], exercise: 'ex_strcapitalize' },
+      { section: 'Task 11 - Unit tests - part II', page: 5, delivery: 'tests/test_my_strstr.c, tests/test_my_strncmp.c, tests/test_my_strcapitalize.c', summary: 'Couverture lignes ≥ 80 %, branches ≥ 60 %.', skills: ['tests'] },
+      { section: 'Task 12 - my_str_isalpha', page: 6, delivery: 'my_str_isalpha.c', prototype: 'int my_str_isalpha(char const *str);', summary: '1 si uniquement des lettres, 0 sinon ; 1 pour la chaîne vide.', skills: ['strfuncs', 'chars'], exercise: 'ex_str_isalpha' },
+      { section: 'Task 13 - my_str_isnum', page: 6, delivery: 'my_str_isnum.c', prototype: 'int my_str_isnum(char const *str);', summary: '1 si uniquement des chiffres ; 1 pour la chaîne vide.', skills: ['strfuncs', 'chars'], exercise: 'ex_str_isnum' },
+      { section: 'Task 14 - my_str_islower', page: 6, delivery: 'my_str_islower.c', prototype: 'int my_str_islower(char const *str);', summary: '1 si uniquement des minuscules ; 1 pour la chaîne vide.', skills: ['strfuncs', 'chars'], exercise: 'ex_str_islower' },
+      { section: 'Task 15 - my_str_isupper', page: 7, delivery: 'my_str_isupper.c', prototype: 'int my_str_isupper(char const *str);', summary: '1 si uniquement des majuscules ; 1 pour la chaîne vide.', skills: ['strfuncs', 'chars'], exercise: 'ex_str_isupper' },
+      { section: 'Task 16 - my_str_isprintable', page: 7, delivery: 'my_str_isprintable.c', prototype: 'int my_str_isprintable(char const *str);', summary: '1 si uniquement des caractères imprimables (man isprint) ; 1 pour la chaîne vide.', skills: ['strfuncs', 'chars'], exercise: 'ex_str_isprintable' },
+      { section: 'Task 17 - Unit tests - part III', page: 7, delivery: 'tests/test_my_str_isalpha.c, tests/test_my_str_islower.c, tests/test_my_str_isprintable.c', summary: 'Couverture lignes 100 %, branches ≥ 80 %.', skills: ['tests'] },
+      { section: 'Task 18 - my_putnbr_base', page: 8, delivery: 'my_putnbr_base.c', prototype: 'int my_putnbr_base(int nbr, char const *base);', summary: 'Afficher un int dans une base donnée par ses symboles (« 01 », « 0123456789ABCDEF »…), négatifs compris.', skills: ['bases'], exercise: 'ex_putnbr_base' },
+      { section: 'Task 19 - my_getnbr_base', page: 8, delivery: 'my_getnbr_base.c', prototype: 'int my_getnbr_base(char const *str, char const *base);', summary: 'Convertir une chaîne écrite dans une base en int ; signes multiples ; 0 en cas d\'erreur.', skills: ['bases', 'getnbr'] },
+      { section: 'Task 20 - my_showstr', page: 8, delivery: 'my_showstr.c', prototype: 'int my_showstr(char const *str);', summary: 'Afficher la chaîne ; les non-imprimables en hexadécimal minuscule précédé d\'un backslash (\\n → \\0a). Renvoie 0.', skills: ['bases', 'chars'], exercise: 'ex_showstr' },
+      { section: 'Task 21 - my_showmem', page: 9, delivery: 'my_showmem.c', prototype: 'int my_showmem(char const *str, int size);', summary: 'Dump mémoire : adresse hexa, 16 octets en hexa, puis les caractères (non imprimables → .). Padding si ligne incomplète.', skills: ['bases', 'chars'] },
+    ],
+    extractionNotes: ['Le prototype de my_strcpy est écrit sans point-virgule dans le PDF.'],
+  },
+  {
+    id: 'd07', file: 'cpool_Day07.pdf', title: 'Day 07', subtitle: 'Libmy, arguments', version: 'v4.2', pages: 6,
+    language: 'C',
+    rules: [
+      { text: NO_MAIN + ' Compilation avec leur main.c (plus de my_putchar fourni).', page: 1 },
+      { text: 'Tous les .c du dossier de rendu sont compilés avec ta libmy, qui doit se trouver dans lib/my/.', page: 1 },
+      { text: 'Fonction système autorisée : write.', page: 2 },
+      { text: 'À partir du lendemain, aucune fonction de ta lib ne doit être recopiée dans tes sources : utilise des déclarations (prototypes) en haut du fichier.', page: 4 },
+      { text: 'Ne pas ajouter libmy.a compilée dans le dépôt.', page: 3 },
+    ],
+    allowed: 'write',
+    compile: 'cd taskXX ; clang *.c -c ; clang *.o autograder/main_taskXX.o -L../lib/my/ -o taskXX -lmy',
+    tasks: [
+      { section: 'Task 01 - libmy.a', page: 3, delivery: 'lib/my/build.sh', summary: 'Script qui construit lib/my/libmy.a contenant 30 fonctions (my_putchar, my_put_nbr, my_strlen, my_getnbr, my_strcmp, my_strcat…).', skills: ['libmy'] },
+      { section: 'Task 02 - my_strcat', page: 4, delivery: 'my_strcat.c', prototype: 'char *my_strcat(char *dest, char const *src);', summary: 'Concaténer src à la fin de dest.', skills: ['strfuncs'], exercise: 'ex_strcat' },
+      { section: 'Task 03 - my_strncat', page: 4, delivery: 'my_strncat.c', prototype: 'char *my_strncat(char *dest, char const *src, int nb);', summary: 'Concaténer au plus nb caractères de src.', skills: ['strfuncs'], exercise: 'ex_strncat' },
+      { section: 'Task 04 - my_print_params', page: 5, delivery: 'task04/*.c', summary: 'Programme qui affiche ses arguments (argv[0] compris), un par ligne. main renvoie 0.', skills: ['argv'], exercise: 'ex_print_params' },
+      { section: 'Task 05 - my_rev_params', page: 5, delivery: 'task05/*.c', summary: 'Même chose en ordre inverse.', skills: ['argv'], exercise: 'ex_rev_params' },
+      { section: 'Task 06 - my_sort_params', page: 6, delivery: 'task06/*.c', summary: 'Arguments triés en ordre ASCII, un par ligne.', skills: ['argv', 'strfuncs'], exercise: 'ex_sort_params' },
+    ],
+  },
+  {
+    id: 'd08', file: 'cpool_Day08.pdf', title: 'Day 08', subtitle: 'Compilation, allocation', version: 'v3.1', pages: 4,
+    language: 'C',
+    rules: [
+      { text: NO_MAIN, page: 1 },
+      { text: 'Compilation avec ta libmy (lib/my/).', page: 1 },
+      { text: 'Fonctions système autorisées : write, malloc, free.', page: 2 },
+    ],
+    allowed: 'write, malloc, free',
+    compile: 'clang *.c -c ; clang *.o autograder/main_taskXX.o -L../lib/my/ -o taskXX -lmy',
+    tasks: [
+      { section: 'Task 01 - my_strdup', page: 3, delivery: 'my_strdup.c', prototype: 'char *my_strdup(char const *src);', summary: 'Allouer et copier une chaîne, renvoyer la nouvelle chaîne.', skills: ['malloc'], exercise: 'ex_strdup' },
+      { section: 'Task 02 - concat_params', page: 3, delivery: 'concat_params.c', prototype: 'char *concat_params(int argc, char **argv);', summary: 'Concaténer tous les arguments en une chaîne, séparés par \\n (pas de \\n final).', skills: ['malloc', 'argv'], exercise: 'ex_concat_params' },
+      { section: 'Task 03 - my_show_word_array', page: 4, delivery: 'my_show_word_array.c', prototype: 'int my_show_word_array(char * const *tab);', summary: 'Afficher un tableau de mots terminé par 0, un mot par ligne.', skills: ['wordarray'], exercise: 'ex_show_word_array' },
+      { section: 'Task 04 - my_str_to_word_array', page: 4, delivery: 'my_str_to_word_array.c', prototype: 'char **my_str_to_word_array(char const *str);', summary: 'Découper une chaîne en mots (séparateurs = tout caractère non alphanumérique), tableau terminé par NULL.', skills: ['wordarray', 'malloc'], exercise: 'ex_str_to_word_array' },
+      { section: 'Task 05 - convert_base', page: 4, delivery: 'convert_base.c', prototype: 'char *convert_base(char const *nbr, char const *base_from, char const *base_to);', summary: 'Convertir un nombre d\'une base à une autre, résultat dans une chaîne allouée.', skills: ['bases', 'malloc'] },
+    ],
+  },
+  {
+    id: 'd09', file: 'cpool_Day09.pdf', title: 'Day 09', subtitle: 'Structures', version: 'v4', pages: 5,
+    language: 'C',
+    rules: [
+      { text: NO_MAIN, page: 1 },
+      { text: 'Les .h vont dans include/ (comme my.h). Compilation avec -I../include/.', page: 1 },
+      { text: 'Fonctions système autorisées : write, malloc, free.', page: 2 },
+    ],
+    allowed: 'write, malloc, free',
+    compile: 'clang *.c -c -I../include/ ; clang *.o autograder/main_taskXX.o -L../lib/my/ -o taskXX -lmy',
+    tasks: [
+      { section: 'Task 01 - my_macro_abs.h', page: 3, delivery: 'include/my_macro_abs.h', prototype: '#define ABS(value)', summary: 'Macro ABS qui remplace son argument par sa valeur absolue.', skills: ['structs'] },
+      { section: 'Task 02 - my.h', page: 3, delivery: 'include/my.h', summary: 'Header avec les prototypes de toutes les fonctions exposées par libmy.a (man nm, fonctions static).', skills: ['libmy'] },
+      { section: 'Task 03 - my_params_to_array', page: 4, delivery: 'my_params_to_array.c', prototype: 'struct info_param *my_params_to_array(int ac, char **av);', summary: 'Tableau de struct info_param (length, str, copy, word_array) alloué, terminé par str = 0.', skills: ['structs', 'malloc'] },
+      { section: 'Task 04 - my_show_param_array', page: 4, delivery: 'my_show_param_array.c', prototype: 'int my_show_param_array(struct info_param const *par);', summary: 'Afficher pour chaque case : paramètre, taille, puis les mots, un par ligne.', skills: ['structs'] },
+      { section: 'Task 05 - get_color', page: 5, delivery: 'get_color.c', prototype: 'int get_color(unsigned char red, unsigned char green, unsigned char blue);', summary: 'Assembler une couleur RGB dans un int, uniquement avec des décalages de bits.', skills: ['structs'], exercise: 'ex_get_color' },
+      { section: 'Task 06 - swap_endian_color', page: 5, delivery: 'swap_endian_color.c', prototype: 'int swap_endian_color(int color);', summary: 'Inverser l\'endianness d\'une couleur ARGB, avec une union.', skills: ['structs'] },
+    ],
+  },
+  {
+    id: 'd10', file: 'cpool_Day10.pdf', title: 'Day 10', subtitle: 'Makefile and do-ops', version: 'v3', pages: 5,
+    language: 'C',
+    rules: [
+      { text: 'Messages d\'erreur sur la sortie d\'erreur, puis sortie avec le code 84 (0 si pas d\'erreur).', page: 1 },
+      { text: NO_MAIN, page: 1 },
+      { text: 'Fonctions système autorisées : write, malloc, free.', page: 1 },
+    ],
+    allowed: 'write, malloc, free',
+    tasks: [
+      { section: 'Task 01 - Makefile', page: 2, delivery: 'lib/my/*', summary: 'Makefile de la libmy : construire la lib, copier libmy.a dans lib/ et my.h dans include/, règle clean.', skills: ['makefile'] },
+      { section: 'Task 02 - do-op', page: 2, delivery: 'do_op/*', summary: 'Programme do-op « valeur1 opérateur valeur2 » (+ - * / %). Makefile all/clean/fclean/re sans relink. Mauvais nombre d\'arguments : rien, erreur. Expression incorrecte : affiche 0 et erreur. Division/modulo par zéro : « Stop: division by zero » / « Stop: modulo by zero ».', skills: ['argv', 'getnbr', 'errors84', 'funcptr'], exercise: 'ex_do_op' },
+      { section: 'Task 03 - my_sort_word_array', page: 4, delivery: 'my_sort_word_array.c', prototype: 'int my_sort_word_array(char **tab);', summary: 'Trier un tableau de mots (ordre ASCII) en échangeant les pointeurs. Renvoie 0.', skills: ['wordarray', 'strfuncs'], exercise: 'ex_sort_word_array' },
+      { section: 'Task 04 - my_advanced_sort_word_array', page: 4, delivery: 'my_advanced_sort_word_array.c', prototype: 'int my_advanced_sort_word_array(char **tab, int(*cmp)(char const *, char const *));', summary: 'Même tri, selon une fonction de comparaison passée en paramètre.', skills: ['funcptr', 'wordarray'], exercise: 'ex_advanced_sort' },
+      { section: 'Task 05 - my_advanced_do-op', page: 5, delivery: 'my_advanced_do_op/*', summary: 'do-op avec my_opp.h (fourni sur My), struct operator, fonctions my_add, my_sub, my_mul, my_div, my_mod, my_usage.', skills: ['funcptr', 'structs', 'errors84'] },
+    ],
+    extractionNotes: [
+      'Dans les exemples de terminal, « /do-op » et « /my_advanced_do-op » sont en réalité « ./do-op » et « ./my_advanced_do-op » (point perdu à l\'extraction).',
+      '« ~$> ake » (p. 5) est « ~$> make ».',
+    ],
+  },
+  {
+    id: 'd11', file: 'cpool_Day11.pdf', title: 'Day 11', subtitle: 'Linked lists', version: 'v3', pages: 5,
+    language: 'C',
+    rules: [
+      { text: 'Messages d\'erreur sur la sortie d\'erreur, code de sortie 84.', page: 1 },
+      { text: 'Fonctions système autorisées : write, malloc, free. La libmy doit avoir un Makefile.', page: 1 },
+      { text: 'La structure linked_list_t doit être dans include/mylist.h.', page: 2 },
+    ],
+    allowed: 'write, malloc, free',
+    tasks: [
+      { section: 'Structure', page: 2, summary: 'typedef struct linked_list { void *data; struct linked_list *next; } linked_list_t;', skills: ['lists', 'structs'] },
+      { section: 'Task 01 - my_params_to_list', page: 2, delivery: 'my_params_to_list.c', prototype: 'linked_list_t *my_params_to_list(int ac, char * const *av);', summary: 'Créer une liste depuis argv, en ajoutant chaque argument en tête : le parcours donne arg3, arg2, …, ./a.out.', skills: ['lists', 'argv'], exercise: 'ex_params_to_list' },
+      { section: 'Task 02 - my_list_size', page: 2, delivery: 'my_list_size.c', prototype: 'int my_list_size(linked_list_t const *begin);', summary: 'Nombre d\'éléments.', skills: ['lists'], exercise: 'ex_list_size' },
+      { section: 'Task 03 - my_rev_list', page: 3, delivery: 'my_rev_list.c', prototype: 'void my_rev_list(linked_list_t **begin);', summary: 'Inverser l\'ordre des éléments.', skills: ['lists'], exercise: 'ex_rev_list' },
+      { section: 'Task 04 - my_apply_on_nodes', page: 3, delivery: 'my_apply_on_nodes.c', prototype: 'int my_apply_on_nodes(linked_list_t *begin, int (*f)(void *));', summary: 'Appliquer f à la donnée de chaque nœud.', skills: ['lists', 'funcptr'] },
+      { section: 'Task 05 - my_apply_on_matching_nodes', page: 3, delivery: 'my_apply_on_matching_nodes.c', prototype: 'int my_apply_on_matching_nodes(linked_list_t *begin, int (*f)(void *), void const *data_ref, int (*cmp)(void *, void const *));', summary: 'Appliquer f aux nœuds dont cmp(data, data_ref) == 0.', skills: ['lists', 'funcptr'] },
+      { section: 'Task 06 - my_find_node', page: 4, delivery: 'my_find_node.c', prototype: 'linked_list_t *my_find_node(linked_list_t const *begin, void const *data_ref, int (*cmp)(void *, void const *));', summary: 'Adresse du premier nœud égal à data_ref.', skills: ['lists', 'funcptr'] },
+      { section: 'Task 07 - my_delete_nodes', page: 4, delivery: 'my_delete_nodes.c', prototype: 'int my_delete_nodes(linked_list_t **begin, void const *data_ref, int (*cmp)(void *, void const *));', summary: 'Supprimer tous les nœuds égaux à data_ref.', skills: ['lists', 'funcptr'], exercise: 'ex_delete_nodes' },
+      { section: 'Task 08 - my_concat_list', page: 4, delivery: 'my_concat_list.c', prototype: 'void my_concat_list(linked_list_t **begin1, linked_list_t *begin2);', summary: 'Rattacher begin2 à la fin de begin1 sans créer d\'éléments.', skills: ['lists'] },
+      { section: 'Task 09 - my_sort_list', page: 5, delivery: 'my_sort_list.c', prototype: 'void my_sort_list(linked_list_t **begin, int (*cmp)(void *, void *));', summary: 'Trier la liste en ordre croissant avec cmp.', skills: ['lists', 'funcptr'] },
+      { section: 'Task 10 - my_add_in_sorted_list', page: 5, delivery: 'my_add_in_sorted_list.c', prototype: 'void my_add_in_sorted_list(linked_list_t **begin, void *data, int (*cmp)(void *, void *));', summary: 'Insérer un nouvel élément en gardant la liste triée.', skills: ['lists', 'funcptr', 'malloc'] },
+      { section: 'Task 11 - my_merge', page: 5, delivery: 'my_merge.c', prototype: 'void my_merge(linked_list_t **begin1, linked_list_t *begin2, int (*cmp)(void *, void *));', summary: 'Fusionner deux listes triées (attention aux pointeurs NULL).', skills: ['lists', 'funcptr'] },
+    ],
+  },
+  {
+    id: 'd12', file: 'cpool_Day12.pdf', title: 'Day 12', subtitle: 'File descriptors', version: 'v3', pages: 5,
+    language: 'C',
+    rules: [
+      { text: 'Messages d\'erreur sur la sortie d\'erreur, code de sortie 84 (0 sinon).', page: 1 },
+      { text: 'Fonctions système autorisées : open, read, write, close.', page: 1 },
+      { text: 'Si tu utilises ta libmy, elle doit être construite depuis le Makefile du projet.', page: 1 },
+    ],
+    allowed: 'open, read, write, close (malloc/free pour grep uniquement)',
+    tasks: [
+      { section: 'Task 01 - Cat', page: 2, delivery: 'cat/*', summary: 'Reproduire cat sans options, nombre illimité de fichiers, sans argument → entrée standard. Tableau de taille fixe (~30 ko), read de taille 1 interdit, malloc et perror interdits, errno autorisé. Makefile all/clean/fclean/re.', skills: ['fd', 'errors84', 'makefile'], exercise: 'ex_cat' },
+      { section: 'Task 02 - Testing cat', page: 3, delivery: 'tests/* cat/Makefile', summary: 'Tests unitaires Criterion de toutes les fonctions de cat, règle tests_run.', skills: ['tests'] },
+      { section: 'Task 03 - grep', page: 4, delivery: 'grep/*', summary: 'Reproduire grep (correspondance simple, pas de regex), fichiers multiples, messages « grep: FICHIER: No such file or directory » / « Permission denied ». malloc/free autorisés pour cette tâche.', skills: ['fd', 'errors84', 'strfuncs'], exercise: 'ex_grep' },
+      { section: 'Task 04 - Testing grep', page: 5, delivery: 'tests/* grep/Makefile', summary: 'Tests unitaires de grep, règle tests_run, fixtures conseillées.', skills: ['tests'] },
+    ],
+  },
+];
+
+export const pdfDay = (id: string) => PDF_DAYS.find((d) => d.id === id)!;
+
+export function sourceLabel(ref: { day: string; section: string; page: number }) {
+  const d = pdfDay(ref.day);
+  return `${d.file} — ${ref.section} (p. ${ref.page})`;
+}
